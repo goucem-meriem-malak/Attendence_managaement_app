@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Attendancy"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Attendence_managaement_app"
+        tools:targetApi="31">
+        <activity
+            android:name=".launch_screen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".courses"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".attendances"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".notifications"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".profile"
+            android:exported="true">
+        </activity>
+    </application>
+
+</manifest>

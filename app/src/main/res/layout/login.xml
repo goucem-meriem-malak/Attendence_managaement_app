@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:padding="20dp"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/pic"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/online_exam" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pic"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:text="Log In"
+        android:textColor="@color/blacky"
+        android:textSize="35sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerInParent="true"
+        android:text="Sign in to track student attendance"
+        android:textSize="18sp" />
+    <LinearLayout
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_margin="8dp"
+            android:text="Enter your e-mail address"
+            android:textStyle="bold"/>
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:translationZ="4dp"
+            android:background="@drawable/style_constraint"
+            android:inputType="textEmailAddress"
+            android:hint="example@email.com"
+            android:drawableRight="@drawable/email"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_margin="8dp"
+            android:text="Enter your password"
+            android:textStyle="bold"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:translationZ="4dp"
+            android:background="@drawable/style_constraint"
+            android:inputType="textPassword"
+            android:hint="**************"
+            android:drawableRight="@drawable/password"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/remember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:text="Remember me"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:text="Forgot password?" />
+        </RelativeLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="12dp"
+        android:layout_marginBottom="40dp"
+        android:text="Log in"
+        android:textColor="@color/blacky"
+        android:textStyle="bold"/>
+</RelativeLayout>
