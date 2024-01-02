@@ -12,14 +12,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class launch_screen extends AppCompatActivity {
-    private Button get_started;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
-    private com.example.attendence_managaement_app.classes.user user;
-    private FirebaseFirestore db;
-
     private SessionManager sessionManager;
-
+    private Button get_started;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +25,13 @@ public class launch_screen extends AppCompatActivity {
 
         if (sessionManager.isLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), courses.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             finish();
         }
-
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-
         get_started.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sessionManager = new SessionManager(getApplicationContext());
-
                 Intent intent = new Intent(getApplicationContext(), login.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);

@@ -5,120 +5,83 @@
     android:id="@+id/refresh">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp">
-        <TextView
-            android:id="@+id/course_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="40dp"
-            android:text="course name"
-            android:textSize="26dp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent">
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:background="@drawable/style_constraint"
-            android:clickable="true"
-            android:padding="15dp"
-            android:translationZ="4dp">
-
-            <Button
-                android:id="@+id/scan_qr"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+            style="@style/header"
+            android:id="@+id/header">
+            <TextView
+                style="@style/text_title"
+                android:id="@+id/course_name"
+                android:text="@string/course_name"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
-                android:background="@drawable/qr_scanner"
-                android:textSize="22sp" />
+                android:background="@drawable/style_constraint"
+                android:clickable="true"
+                android:padding="15dp"
+                android:translationZ="4dp">
+                <Button
+                    style="@style/Button_icon"
+                    android:id="@+id/scan_qr"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/qr_scanner"
+                    android:textSize="22sp" />
+            </RelativeLayout>
         </RelativeLayout>
-        <TextView
-            android:id="@+id/text_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/course_name"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="40dp"
-            android:text="Time"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/course_name"
-            android:layout_centerHorizontal="true"
-            android:text="Date"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/course_name"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="40dp"
-            android:text="Stat"/>
-        <ScrollView
-            android:id="@+id/scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_time"
+        <RelativeLayout
+            style="@style/body"
+            android:id="@+id/body"
+            android:layout_below="@id/header"
             android:layout_above="@id/justification">
-            <LinearLayout
-                android:id="@+id/list_attendances"
+            <TextView
+                style="@style/text_small"
+                android:id="@+id/time"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="40dp"
+                android:text="@string/time"/>
+            <TextView
+                style="@style/text_small"
+                android:layout_centerHorizontal="true"
+                android:text="@string/date"/>
+            <TextView
+                style="@style/text_small"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="40dp"
+                android:text="@string/stat"/>
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:background="@drawable/style_constraint"
-                android:translationZ="3dp"
-                android:padding="12dp"
-                android:clickable="true">
-            </LinearLayout>
-        </ScrollView>
-
+                android:layout_below="@id/time">
+                <LinearLayout
+                    style="@style/Layout_list"
+                    android:id="@+id/list_attendances"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/style_constraint"
+                    android:translationZ="3dp"
+                    android:padding="12dp">
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </RelativeLayout>
         <Button
             android:id="@+id/justification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/footer"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="8dp"
             android:padding="12dp"
-            android:text="Add a justification"
-            android:textColor="@color/blacky"
+            android:text="@string/add_a_justification"
+            android:textColor="@color/white"
+            android:translationZ="3dp"
             android:textStyle="bold"
             android:visibility="gone"/>
-        <RelativeLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-            <Button
-                android:id="@+id/menu"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="80dp"
-                android:background="@drawable/menu" />
-            <Button
-                android:id="@+id/notification"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/notification"
-                android:layout_marginRight="100dp"/>
-            <Button
-                android:id="@+id/profile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/user"
-                android:layout_marginRight="80dp"/>
-        </RelativeLayout>
+        <include layout="@layout/footer"/>
     </RelativeLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

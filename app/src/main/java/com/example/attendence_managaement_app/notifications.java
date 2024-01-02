@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class notifications extends AppCompatActivity {
-    private Button menu, notification, profile;
+    private Button menu, profile;
     private SessionManager sessionManager;
     private user user;
     private List<notification> notifications;
@@ -48,7 +49,6 @@ public class notifications extends AppCompatActivity {
         menu = findViewById(R.id.menu);
         profile = findViewById(R.id.profile);
         swipeRefreshLayout = findViewById(R.id.refresh);
-        notification = findViewById(R.id.notifications);
 
         sessionManager = new SessionManager(getApplicationContext());
         user = sessionManager.getUserDetails();
@@ -63,12 +63,6 @@ public class notifications extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), courses.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
-            }
-        });
-        notification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
             }
         });
         profile.setOnClickListener(new View.OnClickListener() {
@@ -135,11 +129,9 @@ public class notifications extends AppCompatActivity {
             if (Math.abs(distanceX) > Math.abs(distanceY)
                     && Math.abs(distanceX) > SWIPE_THRESHOLD
                     && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                // Right-to-left swipe detected
-                // Start the new activity here
                 Toast.makeText(getApplicationContext(), "Swiped left", Toast.LENGTH_SHORT).show();
-                // Start your new activity
                 Intent intent = new Intent(getApplicationContext(), profile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 return true;
             }
@@ -177,11 +169,22 @@ public class notifications extends AppCompatActivity {
                 imgImageView.setImageResource(R.drawable.warning);
                 imgImageView.setImageDrawable(getTintedDrawable(R.drawable.warning, R.color.yellow));
             }
+            RelativeLayout space = notificationView.findViewById(R.id.space);
+            space.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), attendances.class);
+                    intent.putExtra("idCourse", currentNotification.getIdCourse());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                }
+            });
             imgImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), attendances.class);
                     intent.putExtra("idCourse", currentNotification.getIdCourse());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 }
             });
@@ -190,6 +193,7 @@ public class notifications extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), attendances.class);
                     intent.putExtra("idCourse", currentNotification.getIdCourse());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 }
             });
@@ -198,6 +202,7 @@ public class notifications extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), attendances.class);
                     intent.putExtra("idCourse", currentNotification.getIdCourse());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                 }
             });

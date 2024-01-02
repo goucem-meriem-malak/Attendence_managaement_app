@@ -4,11 +4,15 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +43,7 @@ public class login extends AppCompatActivity {
     private TextView forget_password;
     private EditText email, password;
     private CheckBox remember;
+    private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private List<course> userCourses;
@@ -73,34 +78,69 @@ public class login extends AppCompatActivity {
 
         remember = findViewById(R.id.remember);
 
+        progressBar = findViewById(R.id.progressBar);
+
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                email.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                password.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!email.getText().toString().isEmpty() && !password.getText().toString().isEmpty()){
-                    sessionManager.setLoggedIn(remember.isChecked());
+                if (!email.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(10);
                     loginUser(email.getText().toString(), password.getText().toString());
                 } else if (email.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Your E-mail is empty, please try again", Toast.LENGTH_SHORT).show();
+                    email.setError(getString(R.string.error_empty_email));
                 } else if (password.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Your password is empty, please try again", Toast.LENGTH_SHORT).show();
+                    password.setError(getString(R.string.error_empty_password));
                 }
             }
         });
         forget_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth.sendPasswordResetEmail(email.getText().toString())
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Password reset email sent.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Failed to send password reset email.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
+                if (!email.getText().toString().isEmpty()){
+                    mAuth.sendPasswordResetEmail(email.getText().toString())
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "Password reset email sent.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Failed to send password reset email.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    email.setError(getString(R.string.error_empty_email));
+                }
             }
         });
-
     }
     private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
@@ -206,6 +246,18 @@ public class login extends AppCompatActivity {
                                                 }
                                             });*/
                                             downloadProfilePicture(userId);
+                                            progressBar.setProgress(80);
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    progressBar.setProgress(100);
+                                                    sessionManager.setLoggedIn(remember.isChecked());
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    Intent intent = new Intent(getApplicationContext(), courses.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                    startActivity(intent);
+                                                }
+                                            }, 3000);
                                             sessionManager.saveUserDetails(user);
                                             Intent intent = new Intent(getApplicationContext(), courses.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -239,10 +291,10 @@ public class login extends AppCompatActivity {
                                     sessionManager.saveCourses(userCourses);
                                 }
                             }
+                            getAttendances(courseIds, userid);
                         }
                     });
         }
-        getAttendances(courseIds, userid);
     }
     private void getAttendances(List<String> courseIds, String userid){
         List<attendance> attendanceList = new ArrayList<>();
@@ -332,5 +384,10 @@ public class login extends AppCompatActivity {
                     // Handle failure to list files
                     Log.e(TAG, "Error listing files in user's folder: " + exception.getMessage());
                 });
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

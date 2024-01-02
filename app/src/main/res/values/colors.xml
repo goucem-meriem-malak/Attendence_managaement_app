@@ -13,6 +13,7 @@
     <color name="green">#004903</color>
     <color name="red">#570606</color>
     <color name="yellow">#FFC107</color>
-    <color name="your_pressed_color">#5856D6</color>
-    <color name="your_default_color">#C7C7F1</color>
+    <color name="purple_medium">#FFAA66CC</color>
+    <color name="purple_hurt">#8f00cc</color>
+    <color name="teal">#00e4df</color>
 </resources>

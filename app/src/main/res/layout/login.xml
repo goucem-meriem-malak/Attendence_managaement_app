@@ -8,34 +8,23 @@
     android:gravity="center">
 
     <ImageView
-        android:id="@+id/pic"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/online_exam" />
+        style="@style/img_launchScreen"
+        android:id="@+id/pic"/>
 
     <TextView
+        style="@style/text_huge"
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@+id/pic"
         android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-        android:text="Log In"
-        android:textColor="@color/blacky"
-        android:textSize="35sp"
-        android:textStyle="bold" />
+        android:text="@string/log_in"/>
 
     <TextView
         android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/text_paragraph"
         android:layout_below="@+id/title"
         android:layout_centerInParent="true"
-        android:text="Sign in to track student attendance"
-        android:textSize="18sp" />
+        android:text="@string/sign_in_msg" />
+
     <LinearLayout
         android:id="@+id/input"
         android:layout_width="match_parent"
@@ -44,41 +33,22 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_margin="8dp"
-            android:text="Enter your e-mail address"
-            android:textStyle="bold"/>
+
         <EditText
+            style="@style/editText_input"
             android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:translationZ="4dp"
-            android:background="@drawable/style_constraint"
+            android:drawableRight="@drawable/email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:hint="example@email.com"
-            android:drawableRight="@drawable/email"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_margin="8dp"
-            android:text="Enter your password"
-            android:textStyle="bold"/>
+            android:layout_marginBottom="20dp"/>
+
         <EditText
+            style="@style/editText_input"
             android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:translationZ="4dp"
-            android:background="@drawable/style_constraint"
-            android:inputType="textPassword"
-            android:hint="**************"
-            android:drawableRight="@drawable/password"/>
+            android:drawableEnd="@drawable/password"
+            android:hint="@string/password"
+            android:inputType="textPassword"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,29 +58,35 @@
                 android:id="@+id/remember"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
-                android:text="Remember me"
-                android:textStyle="bold" />
+                android:text="@string/remember_me"/>
 
             <TextView
                 android:id="@+id/forget_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
-                android:clickable="true"
-                android:text="Forgot password?" />
+                android:text="@string/forgot_password"
+                android:textColor="@color/purple_medium"
+                android:textStyle=""/>
         </RelativeLayout>
     </LinearLayout>
     <Button
+        style="@style/button_wide"
         android:id="@+id/login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_above="@id/progressBar"
+        android:layout_marginBottom="20dp"
+        android:text="@string/log_in"/>
+    <ProgressBar
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:id="@+id/progressBar"
+        android:layout_width="180dp"
+        android:layout_height="2dp"
+        android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:padding="12dp"
-        android:layout_marginBottom="40dp"
-        android:text="Log in"
-        android:textColor="@color/blacky"
-        android:textStyle="bold"/>
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible"/>
 </RelativeLayout>

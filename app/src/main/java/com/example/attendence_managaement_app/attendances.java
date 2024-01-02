@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.attendence_managaement_app.classes.attendance;
 import com.example.attendence_managaement_app.classes.course;
+import com.example.attendence_managaement_app.classes.group;
 import com.example.attendence_managaement_app.classes.justification;
 import com.example.attendence_managaement_app.classes.user;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,6 +39,7 @@ import com.google.android.material.divider.MaterialDivider;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -89,12 +91,12 @@ public class attendances extends AppCompatActivity {
         notification = findViewById(R.id.notification);
         profile = findViewById(R.id.profile);
         scanQR = findViewById(R.id.scan_qr);
+        courseName = findViewById(R.id.course_name);
+        swipeRefreshLayout = findViewById(R.id.refresh);
 
 
         sessionManager = new SessionManager(getApplicationContext());
         user = sessionManager.getUserDetails();
-
-        courseName = findViewById(R.id.course_name);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -116,7 +118,6 @@ public class attendances extends AppCompatActivity {
                 showUploadOptionsDialog();
             }
         });
-        swipeRefreshLayout = findViewById(R.id.refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -220,14 +221,10 @@ public class attendances extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int which) {
                         switch (which) {
                             case 0:
-                                //openFilePicker(REQUEST_PDF_PICKER, "application/pdf");
                                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                                 intent.setType("*/*");
                                 startActivityForResult(intent, REQUEST_FILE_PICKER);
                                 break;
-                            //case 1:
-                                //openFilePicker(REQUEST_IMAGE_PICKER, "image/*");
-                                //break;
                             case 1:
                                 dialogInterface.dismiss();
                                 break;
@@ -242,6 +239,7 @@ public class attendances extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedText = result.getContents();
@@ -307,24 +305,19 @@ public class attendances extends AppCompatActivity {
         dialog.show();
     }
     private void getAttendance(String Qrcode) {
-        db.collection("attendance").document(Qrcode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        List<String> listOfPresence = (List<String>) document.get("listOfPresence");
-                        if (listOfPresence != null && !listOfPresence.contains(user.getUid())) {
-                            addToAttendances(document);
-                            updatePresenceArray(document);
-                        }
-                    }
-                }
-            }
-        });
+        db.collection("attendance").document(Qrcode).update("listOfPresence", FieldValue.arrayUnion(user.getUid()))
+                .addOnSuccessListener(aVoid -> {
+                    refreshActivity(idCourse);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getApplicationContext(), "Error updating array: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
     private void refreshActivity(String idCourse){
-        db.collection("attendance").whereEqualTo("idCourse", idCourse)
+        group group = sessionManager.getGroup();
+        List<String> courseIds = group.getListOfCourses();
+
+        db.collection("attendance").whereIn("idCourse", courseIds)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -332,15 +325,18 @@ public class attendances extends AppCompatActivity {
                         attendanceContainer.removeAllViews();
                         for (DocumentSnapshot document : task.getResult()) {
                             String id = document.getId();
+                            String idcourse = document.getString("idCourse");
                             Timestamp time = document.getTimestamp("time");
                             List<String> listOfPresence = (List<String>) document.get("listOfPresence");
                             boolean stat = listOfPresence != null && listOfPresence.contains(user.getUid());
-                            attendance attendance = new attendance(id, idCourse, stat, time);
+                            attendance attendance = new attendance(id, idcourse, stat, time);
                             attendances.add(attendance);
                         }
                         user.setAttendances(attendances);
                         sessionManager.saveAttendances(attendances);
                         getAttendances(idCourse);
+                    } else {
+                        System.out.println("Error getting documents: " + task.getException());
                     }
                 });
     }
@@ -350,69 +346,8 @@ public class attendances extends AppCompatActivity {
                 .setPositiveButton("ok", (dialog, which) -> {
                     dialog.dismiss();
                 });
-
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_dialog_background);
         alertDialog.show();
-    }
-    private void addAttendance(Timestamp time) {
-        View attendanceView = LayoutInflater.from(this).inflate(R.layout.attendance, null);
-
-        View dividerView = new MaterialDivider(this);
-        attendanceContainer.addView(dividerView);
-
-        LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, (int) 0.5);
-        dividerView.setLayoutParams(dividerParams);
-
-        TextView timeTextView = attendanceView.findViewById(R.id.time);
-        TextView dateTextView = attendanceView.findViewById(R.id.date);
-        ImageView statImageView = attendanceView.findViewById(R.id.stat);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-
-        timeTextView.setText(timeFormat.format(time.toDate()));
-        dateTextView.setText(dateFormat.format(time.toDate()));
-        statImageView.setImageResource(R.drawable.right);
-        attendanceContainer.addView(attendanceView);
-    }
-    private void updatePresenceArray(DocumentSnapshot document) {
-        ArrayList<String> currentPresenceList = (ArrayList<String>) document.get("listOfPresence");
-
-        if (currentPresenceList != null) {
-            currentPresenceList.add(user.getUid());
-
-            document.getReference().update("listOfPresence", currentPresenceList)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                addAttendance(document.getTimestamp("time"));
-                                message("Successful", "Your presence has been updated");
-                            } else {
-                                message("Unsuccessful", "Something went wrong please try again");
-                            }
-                        }
-                    });
-        } else {
-            Log.e("Firestore", "Unexpected null array");
-        }
-    }
-    private void addToAttendances(DocumentSnapshot document) {
-        List<attendance> userAttendances = user.getAttendances();
-
-        String idCourse = document.getString("idCourse");
-        Boolean stat = true;
-        Timestamp time = document.getTimestamp("time");
-
-        attendance attendanceObj;
-        attendanceObj = new attendance(document.getId(), idCourse, stat, time);
-
-        if (!userAttendances.contains(attendanceObj)){
-            userAttendances.add(attendanceObj);
-            user.setAttendances(userAttendances);
-            sessionManager.saveAttendances(userAttendances);
-        }
     }
 }

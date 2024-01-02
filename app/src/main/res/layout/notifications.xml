@@ -3,33 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/refresh">
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp">
-
-        <TextView
-            android:id="@+id/activity_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="20dp"
-            android:text="Notification"
-            android:textSize="26dp"
-            android:textStyle="bold" />
-        <ScrollView
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            style="@style/header"
+            android:id="@+id/header">
+            <TextView
+                style="@style/text_title"
+                android:id="@+id/activity_name"
+                android:text="@string/notification"/>
+        </RelativeLayout>
+        <androidx.core.widget.NestedScrollView
+            style="@style/body"
             android:layout_above="@id/footer"
-            android:layout_below="@id/activity_name">
+            android:layout_below="@id/header">
             <LinearLayout
-                android:id="@+id/list_notifications"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                style="@style/Layout_list"
+                android:id="@+id/list_notifications">
                 <LinearLayout
                     android:id="@+id/notification"
                     android:layout_width="match_parent"
@@ -37,35 +28,7 @@
                     android:orientation="vertical">
                 </LinearLayout>
             </LinearLayout>
-        </ScrollView>
-        <RelativeLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-            <Button
-                android:id="@+id/menu"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="80dp"
-                android:background="@drawable/menu" />
-            <Button
-                android:id="@+id/notifications"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/notification"
-                android:layout_marginRight="100dp"/>
-            <Button
-                android:id="@+id/profile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/user"
-                android:layout_marginRight="80dp"/>
-        </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+        <include layout="@layout/footer"/>
     </RelativeLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
